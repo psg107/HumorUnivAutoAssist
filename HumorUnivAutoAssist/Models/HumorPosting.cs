@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HumorUnivAutoAssist.Models
+﻿namespace HumorUnivAutoAssist.Models
 {
     /// <summary>
     /// 게시글

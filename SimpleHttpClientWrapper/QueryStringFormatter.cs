@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -34,14 +33,14 @@ namespace HumorUnivAutoAssist
                     .Where(x => x.GetValue(value, null) != null)
                     .Select(x =>
                     {
-                        var displayAttribute = x.GetCustomAttributes(false).FirstOrDefault(x => x.GetType() == typeof(DisplayAttribute)) as DisplayAttribute;
+                        var displayAttribute = x.GetCustomAttributes(false).FirstOrDefault(y => y.GetType() == typeof(DisplayAttribute)) as DisplayAttribute;
 
                         var k = displayAttribute?.Name ?? x.Name;
                         var v = HttpUtility.UrlEncode(x.GetValue(value, null).ToString());
 
                         return $"{k}={v}";
                     });
-                var queryString = string.Join('&', queries);
+                var queryString = string.Join("&", queries);
                 var byteQuery = Encoding.UTF8.GetBytes(queryString);
                 writeStream.Write(byteQuery, 0, byteQuery.Length);
             });
