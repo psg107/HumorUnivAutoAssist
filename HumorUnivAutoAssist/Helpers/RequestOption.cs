@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace HumorUnivAutoAssist.Helpers
 {
+    public enum RequestType
+    {
+        Default,
+        Json,
+        QueryString
+    }
+
     public enum ResponseType
     {
         Default,
@@ -20,10 +27,16 @@ namespace HumorUnivAutoAssist.Helpers
     {
         public RequestOption()
         {
+            RequestType = RequestType.Default;
             RequestHeaders = new Dictionary<string, string>();
             ResponseType = ResponseType.Default;
             ResponseEncoding = "euc-kr";
         }
+
+        /// <summary>
+        /// 요청 데이터 종류
+        /// </summary>
+        public RequestType RequestType { get; set; }
 
         /// <summary>
         /// 요청 헤더

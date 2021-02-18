@@ -23,6 +23,14 @@ namespace HumorUnivAutoAssist
             Task.Run(async () =>
             {
                 var huService = new HURecommendService(null);
+#warning 로그인 정보 외부에서 주입 하도록 처리 필요
+                var loginSuccess = await huService.Login("", "");
+                if (loginSuccess == false)
+                {
+                    Debugger.Break();
+                    throw new Exception("로그인 실패!!!");
+                }
+
                 while (true)
                 {
                     var postings = await huService.GetPostings(39);

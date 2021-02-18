@@ -27,9 +27,35 @@ namespace HumorUnivAutoAssist.Services
             this.option = option ?? new HURecommendServiceOption();
         }
 
+        public async Task<bool> Login(string id, string password)
+        {
+            var result = await HttpClientWrapper.PostStringAsync("https://web.humoruniv.com/user/login_process.php", new Login
+            {
+                Url = string.Empty,
+                Id = id,
+                Pw = password
+            }, 
+            new RequestOption
+            {
+                RequestType = RequestType.QueryString,
+                RequestHeaders = new Dictionary<string, string>
+                {
+                    { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36" },
+                    { "Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" },
+                    { "Referer", "https://web.humoruniv.com/user/login.html" },
+                    { "Accept-Encoding", "gzip, deflate, br" },
+                    { "Accept-Language", "ko,en-US;q=0.9,en;q=0.8" },
+                }
+            });
+
+            var setCookieCount = result.Headers.Count(x => x.Key == "Set-Cookie");
+
+            return setCookieCount != 0;
+        }
+
         public async Task<List<HumorPosting>> GetPostings(int minScore)
         {
-            var content = await HttpClientWrapper.GetStringAsync("http://web.humoruniv.com/board/humor/list.html?table=pdswait&st=day", new RequestOption
+            var result = await HttpClientWrapper.GetStringAsync("http://web.humoruniv.com/board/humor/list.html?table=pdswait&st=day", new RequestOption
             {
                 RequestHeaders = new Dictionary<string, string>
                 {
@@ -39,10 +65,16 @@ namespace HumorUnivAutoAssist.Services
                 ResponseEncoding = "euc-kr",
             });
 
+            if (!result.Success)
+            {
+                Debugger.Break();
+                throw new Exception($"Fail..");
+            }
+
             List<HumorPosting> postings = new List<HumorPosting>();
 
             var doc = new HtmlDocument();
-            doc.LoadHtml(content);
+            doc.LoadHtml(result.Data);
             var postNodes = doc.DocumentNode.SelectNodes("//tr[contains(@id, 'li_chk_pdswait')]");
 
             foreach (var postNode in postNodes)
