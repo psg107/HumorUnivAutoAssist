@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HumorUnivAutoAssist
+namespace HumorUnivAutoAssist.Services
 {
     /// <summary>
     /// 
@@ -14,11 +14,9 @@ namespace HumorUnivAutoAssist
     {
         public HURecommendServiceOption()
         {
-#warning 비추천 가중치 '3' 정확하지 않음. 확인 필요
-
+#warning 비추천 가중치 '6' 정확하지 않음. 확인 필요, 5보다 높다는건 확인함 (50/2)
             this.UpWeight = 1;
-            this.DownWeight = 3;
-            this.MinimumScore = 39;
+            this.DownWeight = 6;
         }
 
         /// <summary>
@@ -35,10 +33,5 @@ namespace HumorUnivAutoAssist
             set => downWeight = Math.Abs(value);
         }
         private int downWeight;
-
-        /// <summary>
-        /// 가져올 게시글의 최소 점수
-        /// </summary>
-        public int MinimumScore { get; set; }
     }
 }
