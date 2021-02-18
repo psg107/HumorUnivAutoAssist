@@ -1,6 +1,6 @@
 ﻿using HtmlAgilityPack;
-using HumorUnivAutoAssist.Helpers;
 using HumorUnivAutoAssist.Models;
+using SimpleHttpClientWrapper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

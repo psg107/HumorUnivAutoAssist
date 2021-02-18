@@ -8,8 +8,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using SimpleHttpClientWrapper;
 
-namespace HumorUnivAutoAssist
+namespace SimpleHttpClientWrapper
 {
     public class QueryStringFormatter : MediaTypeFormatter
     {
@@ -33,7 +34,7 @@ namespace HumorUnivAutoAssist
                     .Where(x => x.GetValue(value, null) != null)
                     .Select(x =>
                     {
-                        var displayAttribute = x.GetCustomAttributes(false).FirstOrDefault(y => y.GetType() == typeof(DisplayAttribute)) as DisplayAttribute;
+                        var displayAttribute = x.GetCustomAttributes(false).FirstOrDefault(y => y.GetType() == typeof(KeyNameAttribute)) as KeyNameAttribute;
 
                         var k = displayAttribute?.Name ?? x.Name;
                         var v = HttpUtility.UrlEncode(x.GetValue(value, null).ToString());

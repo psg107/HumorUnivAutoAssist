@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SimpleHttpClientWrapper;
 
 namespace HumorUnivAutoAssist.Models
 {
@@ -7,13 +7,13 @@ namespace HumorUnivAutoAssist.Models
     /// </summary>
     public class Login
     {
-        [Display(Name = "url")]
+        [KeyName(Name = "url")]
         public string Url { get; set; }
 
-        [Display(Name = "id")]
+        [KeyName(Name = "url")]
         public string Id { get; set; }
 
-        [Display(Name = "pw")]
+        [KeyName(Name = "url")]
         public string Pw { get; set; }
     }
 }

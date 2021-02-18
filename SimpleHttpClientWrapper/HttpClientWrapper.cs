@@ -1,5 +1,4 @@
-﻿using HumorUnivAutoAssist.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Net;
@@ -8,7 +7,7 @@ using System.Net.Http.Formatting;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HumorUnivAutoAssist.Helpers
+namespace SimpleHttpClientWrapper
 {
     /// <summary>
     /// Http Client Wrapper
