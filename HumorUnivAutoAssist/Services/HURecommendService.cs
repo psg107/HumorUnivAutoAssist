@@ -17,9 +17,9 @@ namespace HumorUnivAutoAssist.Services
     /// </summary>
     public class HURecommendService : IHURecommendService
     {
-        private const string BASE_URL = "http://web.humoruniv.com/board/humor";
-
         private readonly HURecommendServiceOption option;
+
+        #region ctor
 
         public HURecommendService()
         {
@@ -29,7 +29,9 @@ namespace HumorUnivAutoAssist.Services
         public HURecommendService(HURecommendServiceOption option)
         {
             this.option = option ?? new HURecommendServiceOption();
-        }
+        } 
+
+        #endregion
 
         public async Task<bool> Login(string id, string password)
         {
