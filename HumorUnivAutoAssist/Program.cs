@@ -1,5 +1,6 @@
 ﻿using HumorUnivAutoAssist.Helpers;
 using HumorUnivAutoAssist.Services;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Diagnostics;
 using System.Text;
@@ -11,6 +12,20 @@ namespace HumorUnivAutoAssist
     {
         static void Main(string[] args)
         {
+#if DEBUG
+            var configFileName = "appsettings_debug.json";
+#else
+            var configFileName = "appsettings.json";
+#endif
+            IConfiguration configuration = new ConfigurationBuilder()
+              .AddJsonFile(configFileName, optional: true, reloadOnChange: true)
+              .AddEnvironmentVariables()
+              .AddCommandLine(args)
+              .Build();
+
+            var id = configuration.GetSection("id").Value;
+            var password = configuration.GetSection("password").Value;
+
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
                 var ex = e.ExceptionObject as Exception;
@@ -23,13 +38,12 @@ namespace HumorUnivAutoAssist
             };
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
+            
             Task.Run(async () =>
             {
                 var huService = new HURecommendService();
 
-#warning 로그인 정보 외부에서 주입 하도록 처리 필요
-                var loginSuccess = await huService.Login("", "");
+                var loginSuccess = await huService.Login(id, password);
                 if (loginSuccess == false)
                 {
                     Debugger.Break();
