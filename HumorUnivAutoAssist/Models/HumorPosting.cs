@@ -6,6 +6,11 @@
     public class HumorPosting
     {
         /// <summary>
+        /// /Key
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
         /// 제목
         /// </summary>
         public string Title { get; set; }

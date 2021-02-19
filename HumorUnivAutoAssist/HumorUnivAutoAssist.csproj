@@ -15,4 +15,10 @@
     <ProjectReference Include="..\SimpleHttpClientWrapper\SimpleHttpClientWrapper.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Scripts\GenerateHashCheckValue_Deobfuscation.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
