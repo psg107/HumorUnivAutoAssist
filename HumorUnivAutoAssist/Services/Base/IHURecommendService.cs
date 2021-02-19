@@ -26,6 +26,6 @@ namespace HumorUnivAutoAssist.Services
         /// </summary>
         /// <param name="posting"></param>
         /// <returns></returns>
-        Task TryAssist(HumorPosting posting);
+        Task<bool> TryAssist(HumorPosting posting);
     }
 }

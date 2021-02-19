@@ -1,4 +1,5 @@
-﻿using HumorUnivAutoAssist.Services;
+﻿using HumorUnivAutoAssist.Helpers;
+using HumorUnivAutoAssist.Services;
 using System;
 using System.Diagnostics;
 using System.Text;
@@ -13,6 +14,9 @@ namespace HumorUnivAutoAssist
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
                 var ex = e.ExceptionObject as Exception;
+
+                LogHelper.Log(ex.Message);
+                LogHelper.Log(ex.StackTrace);
                 //ex.Message
                 //ex.StackTrace
                 Debugger.Break();
@@ -32,7 +36,7 @@ namespace HumorUnivAutoAssist
                     throw new Exception("로그인 실패!!!");
                 }
 
-                Console.WriteLine("로그인 성공..");
+                LogHelper.Log("로그인 성공!");
 
                 while (true)
                 {
@@ -40,19 +44,21 @@ namespace HumorUnivAutoAssist
                     var postings = await huService.GetPostings(minScore);
                     if (postings.Count > 0)
                     {
-                        Console.WriteLine($"점수 {minScore} 이상 게시글 {postings.Count}개 발견");
+                        LogHelper.Log($"점수 {minScore} 이상 게시글 {postings.Count}개 발견");
                     }
 
                     foreach (var posting in postings)
                     {
-                        Debugger.Break();
-                        await huService.TryAssist(posting);
+                        var assist = await huService.TryAssist(posting);
+                        LogHelper.Log(assist 
+                                        ? $"게시글 '{posting.Title}' 어시스트 시도!!"
+                                        : $"게시글 '{posting.Title}' 어시스트 실패..");
 
-                        Console.WriteLine($"게시글 '{posting.Title}' 어시스트 시도!!");
+                        Debugger.Break();
                     }
 
 #warning 특정 점수 구간에서는 대기 시간을 더 짧게 설정할 수 있도록 처리 필요 (HURecommendServiceOption)
-                    Console.WriteLine($"대기중..");
+                    LogHelper.Log($"대기중..");
                     await Task.Delay(5000);
                 }
             }).Wait();

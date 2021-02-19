@@ -10,10 +10,16 @@ namespace HumorUnivAutoAssist.Services
     {
         public HURecommendServiceOption()
         {
-#warning 비추천 가중치 '6' 정확하지 않음. 확인 필요, 5보다 높다는건 확인함 (50/2)
+            this.WaitTime = 100;
+#warning 비추천 가중치 '10' 정확하지 않음. 확인 필요, 5보다 높다는건 확인함 (50/2)
             this.UpWeight = 1;
-            this.DownWeight = 6;
+            this.DownWeight = 10;
         }
+
+        /// <summary>
+        /// 로그인 이후 '쿠키 갱신 에러' 방지를 위한 대기 시간 (초단위)
+        /// </summary>
+        public int WaitTime { get; set; }
 
         /// <summary>
         /// 추천 가중치

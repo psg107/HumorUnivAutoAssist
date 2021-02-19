@@ -24,6 +24,7 @@ namespace SimpleHttpClientWrapper
             httpClientHandler = new HttpClientHandler
             {
                 CookieContainer = cookieContainer,
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             };
             client = new HttpClient(httpClientHandler);
         }
