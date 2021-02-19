@@ -1,4 +1,5 @@
 ﻿using HumorUnivAutoAssist.Models;
+using HumorUnivAutoAssist.Models.DataTransfers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,17 +16,18 @@ namespace HumorUnivAutoAssist.Services
         Task<bool> Login(string id, string password);
 
         /// <summary>
-        /// 게시글 포스팅 가져오기
+        /// 게시글 정보 가져오기
         /// </summary>
-        /// <param name="minScore">가져올 게시글의 최소 점수</param>
+        /// <param name="checkScore">리스트에서 확인한 최소 점수</param>
+        /// <param name="minScore">실제 게시글에서 가져온 최소 점수</param>
         /// <returns></returns>
-        Task<List<HumorPosting>> GetPostings(int minScore);
+        Task<List<HumorPosting>> GetPostings(int checkScore, int minScore);
 
         /// <summary>
         /// 게시글 어시스트
         /// </summary>
         /// <param name="posting"></param>
         /// <returns></returns>
-        Task<bool> TryAssist(HumorPosting posting);
+        Task<bool> TryAssist(HumorPosting humorPosting);
     }
 }

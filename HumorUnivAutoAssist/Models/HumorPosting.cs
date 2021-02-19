@@ -1,4 +1,6 @@
-﻿namespace HumorUnivAutoAssist.Models
+﻿using HumorUnivAutoAssist.Models.DataTransfers;
+
+namespace HumorUnivAutoAssist.Models
 {
     /// <summary>
     /// 게시글
@@ -29,5 +31,10 @@
         /// 주소
         /// </summary>
         public string Url { get; set; }
+
+        /// <summary>
+        /// 어시스트 정보
+        /// </summary>
+        public Assist AssistInfo { get; set; }
     }
 }

@@ -40,19 +40,20 @@ namespace HumorUnivAutoAssist
 
                 while (true)
                 {
+                    var checkScore = 37;
                     var minScore = 39;
-                    var postings = await huService.GetPostings(minScore);
-                    if (postings.Count > 0)
+                    var humorPostings = await huService.GetPostings(checkScore, minScore);
+                    if (humorPostings.Count > 0)
                     {
-                        LogHelper.Log($"점수 {minScore} 이상 게시글 {postings.Count}개 발견");
+                        LogHelper.Log($"점수 {minScore} 이상 게시글 {humorPostings.Count}개 발견");
                     }
 
-                    foreach (var posting in postings)
+                    foreach (var humorPosting in humorPostings)
                     {
-                        var assist = await huService.TryAssist(posting);
-                        LogHelper.Log(assist 
-                                        ? $"게시글 '{posting.Title}' 어시스트 시도!!"
-                                        : $"게시글 '{posting.Title}' 어시스트 실패..");
+                        var isSuccessAssist = await huService.TryAssist(humorPosting);
+                        LogHelper.Log(isSuccessAssist 
+                                        ? $"'{humorPosting.Title}' 게시글 어시스트 성공!!"
+                                        : $"'{humorPosting.Title}' 게시글 어시스트 실패..");
 
                         Debugger.Break();
                     }
