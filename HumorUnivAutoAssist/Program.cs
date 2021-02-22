@@ -69,7 +69,7 @@ namespace HumorUnivAutoAssist
                                         ? $"'{humorPosting.Title}' 게시글 어시스트 성공!!"
                                         : $"'{humorPosting.Title}' 게시글 어시스트 실패..");
 
-                        Debugger.Break();
+                        //Debugger.Break();
                     }
 
 #warning 특정 점수 구간에서는 대기 시간을 더 짧게 설정할 수 있도록 처리 필요 (HURecommendServiceOption)
