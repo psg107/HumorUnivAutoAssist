@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SimpleHttpClientWrapper
@@ -20,6 +21,8 @@ namespace SimpleHttpClientWrapper
 
         static HttpClientWrapper()
         {
+            //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             cookieContainer = new CookieContainer();
             httpClientHandler = new HttpClientHandler
             {
@@ -27,6 +30,32 @@ namespace SimpleHttpClientWrapper
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
             };
             client = new HttpClient(httpClientHandler);
+        }
+
+        public static void SetCookie(string rawStringCookie, string domain)
+        {
+            foreach (var cookie in rawStringCookie.Split(';').Select(x => x.Trim()))
+            {
+                if (string.IsNullOrWhiteSpace(cookie))
+                {
+                    continue;
+                }
+
+                var match = Regex.Match(cookie.Trim(), "^([%a-zA-Z0-9_-]+)=(.*)$");
+                if (match.Success)
+                {
+                    var key = match.Groups[1].Value.Trim();
+                    var value = match.Groups[2].Value.Trim();
+
+                    cookieContainer.Add(new Cookie(key, value, "/", domain));
+                }
+                else
+                {
+                    throw new Exception($"" +
+                        $"쿠키 정보를 세팅하지 못했습니다.\n" +
+                        $"예외쿠키 : {cookie}");
+                }
+            }
         }
 
         /// <summary>
@@ -102,7 +131,7 @@ namespace SimpleHttpClientWrapper
                     var byteContent = await response.Content.ReadAsByteArrayAsync();
                     if (byteContent.Length > 0)
                     {
-                        result.Data = Encoding.GetEncoding("euc-kr").GetString(byteContent, 0, byteContent.Length);
+                        result.Data = Encoding.GetEncoding(option.ResponseEncoding).GetString(byteContent, 0, byteContent.Length);
                     }
                 }
             }
@@ -116,16 +145,19 @@ namespace SimpleHttpClientWrapper
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T1">request</typeparam>
+        /// <typeparam name="T2">response</typeparam>
         /// <param name="url"></param>
         /// <param name="data"></param>
         /// <param name="option"></param>
         /// <returns></returns>
-        public static async Task<RequestResult<T>> PostAsync<T>(string url, T data, RequestOption option = null) where T : class
+        public static async Task<RequestResult<T2>> PostAsync<T1, T2>(string url, T1 data, RequestOption option = null) 
+            where T1 : class
+            where T2 : class
         {
             option = option ?? new RequestOption();
 
-            RequestResult<T> result = new RequestResult<T>();
+            RequestResult<T2> result = new RequestResult<T2>();
 
             client.DefaultRequestHeaders.Clear();
             foreach (var header in option?.RequestHeaders)
@@ -170,7 +202,7 @@ namespace SimpleHttpClientWrapper
                     switch (option.ResponseType)
                     {
                         case ResponseType.Json:
-                            result.Data = JsonConvert.DeserializeObject<T>(content.Result);
+                            result.Data = JsonConvert.DeserializeObject<T2>(content.Result);
                             break;
 
                         default:
@@ -246,7 +278,7 @@ namespace SimpleHttpClientWrapper
                     var byteContent = await response.Content.ReadAsByteArrayAsync();
                     if (byteContent.Length > 0)
                     {
-                        result.Data = Encoding.GetEncoding("euc-kr").GetString(byteContent, 0, byteContent.Length);
+                        result.Data = Encoding.GetEncoding(option.ResponseEncoding).GetString(byteContent, 0, byteContent.Length);
                     }
                 }
             }

@@ -31,13 +31,15 @@ namespace SimpleHttpClientWrapper
             return Task.Factory.StartNew(() =>
             {
                 var queries = value.GetType().GetProperties()
-                    .Where(x => x.GetValue(value, null) != null)
+                    //.Where(x => x.GetValue(value, null) != null)
                     .Select(x =>
                     {
                         var displayAttribute = x.GetCustomAttributes(false).FirstOrDefault(y => y.GetType() == typeof(KeyNameAttribute)) as KeyNameAttribute;
 
+                        var rawV = x.GetValue(value, null);
+
                         var k = displayAttribute?.Name ?? x.Name;
-                        var v = HttpUtility.UrlEncode(x.GetValue(value, null).ToString());
+                        var v = rawV == null ? "null" : HttpUtility.UrlEncode(rawV.ToString());
 
                         return $"{k}={v}";
                     });
