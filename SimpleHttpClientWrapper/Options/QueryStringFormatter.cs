@@ -1,14 +1,11 @@
-﻿using System;
+﻿using SimpleHttpClientWrapper.Helpers;
+using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using SimpleHttpClientWrapper;
 
 namespace SimpleHttpClientWrapper
 {
@@ -30,20 +27,7 @@ namespace SimpleHttpClientWrapper
         {
             return Task.Factory.StartNew(() =>
             {
-                var queries = value.GetType().GetProperties()
-                    //.Where(x => x.GetValue(value, null) != null)
-                    .Select(x =>
-                    {
-                        var displayAttribute = x.GetCustomAttributes(false).FirstOrDefault(y => y.GetType() == typeof(KeyNameAttribute)) as KeyNameAttribute;
-
-                        var rawV = x.GetValue(value, null);
-
-                        var k = displayAttribute?.Name ?? x.Name;
-                        var v = rawV == null ? "null" : HttpUtility.UrlEncode(rawV.ToString());
-
-                        return $"{k}={v}";
-                    });
-                var queryString = string.Join("&", queries);
+                var queryString = QueryStringHelper.ObjectToQueryString(value);
                 var byteQuery = Encoding.UTF8.GetBytes(queryString);
                 writeStream.Write(byteQuery, 0, byteQuery.Length);
             });

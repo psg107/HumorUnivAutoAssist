@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SimpleHttpClientWrapper.Helpers;
 using System;
 using System.Linq;
 using System.Net;
@@ -61,11 +62,13 @@ namespace SimpleHttpClientWrapper
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="RequestResult"></typeparam>
+        /// <typeparam name="T"></typeparam>
         /// <param name="url"></param>
+        /// <param name="data"></param>
         /// <param name="option"></param>
         /// <returns></returns>
-        public static async Task<RequestResult<T>> GetAsync<T>(string url, RequestOption option = null) where T : class
+        public static async Task<RequestResult<T>> GetAsync<T>(string url, object data = null, RequestOption option = null)
+            where T : class
         {
             option = option ?? new RequestOption();
 
@@ -76,13 +79,18 @@ namespace SimpleHttpClientWrapper
             {
                 client.DefaultRequestHeaders.Add(header.Key, header.Value);
             }
+            
+            if (data != null)
+            {
+                var queryString = QueryStringHelper.ObjectToQueryString(data);
+                url = $"{url}?{queryString}";
+            }
 
             var response = await client.GetAsync(url);
             if (response.IsSuccessStatusCode)
             {
                 await response.Content.ReadAsStringAsync().ContinueWith((content) =>
                 {
-
                     switch (option.ResponseType)
                     {
                         case ResponseType.Json:
@@ -145,19 +153,17 @@ namespace SimpleHttpClientWrapper
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T1">request</typeparam>
-        /// <typeparam name="T2">response</typeparam>
+        /// <typeparam name="T">response</typeparam>
         /// <param name="url"></param>
         /// <param name="data"></param>
         /// <param name="option"></param>
         /// <returns></returns>
-        public static async Task<RequestResult<T2>> PostAsync<T1, T2>(string url, T1 data, RequestOption option = null) 
-            where T1 : class
-            where T2 : class
+        public static async Task<RequestResult<T>> PostAsync<T>(string url, object data, RequestOption option = null)
+            where T : class
         {
             option = option ?? new RequestOption();
 
-            RequestResult<T2> result = new RequestResult<T2>();
+            RequestResult<T> result = new RequestResult<T>();
 
             client.DefaultRequestHeaders.Clear();
             foreach (var header in option?.RequestHeaders)
@@ -202,7 +208,7 @@ namespace SimpleHttpClientWrapper
                     switch (option.ResponseType)
                     {
                         case ResponseType.Json:
-                            result.Data = JsonConvert.DeserializeObject<T2>(content.Result);
+                            result.Data = JsonConvert.DeserializeObject<T>(content.Result);
                             break;
 
                         default:
